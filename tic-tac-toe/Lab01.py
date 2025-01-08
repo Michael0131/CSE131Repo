@@ -10,6 +10,7 @@
 #      -total time in hours including reading the assignment and submitting the program-
 
 import json
+import time
 
 # The characters used in the Tic-Tac-Too board.
 # These are constants and therefore should never have to change.
@@ -27,18 +28,54 @@ blank_board = {
                 BLANK, BLANK, BLANK ]
         }
 
+game_board = {'1': ' ' , '2': ' ' , '3': ' ' ,
+            '4': ' ' , '5': ' ' , '6': ' ' ,
+            '7': ' ' , '8': ' ' , '9': ' ' }
+
 def read_board(filename):
     '''Read the previously existing board from the file if it exists.'''
+
+    # request file name
+    file_name = input("Enter the file name to open: ")
+
+    # see if file name provided contains ".json" if not, add it to the end
+    if not file_name.endswith(".json"):
+        file_name += ".json"
     # Put file reading code here.
+
+    #open the file path
+    with open(file_name, 'r') as file:
+        data = json.load(file)
+
+    print("File found successfully!!")
+
+    if FileNotFoundError:
+        print(f"Error: File {file_name} not found.")
+        time.sleep(3)
+        exit()
+        
     return blank_board['board']
 
 def save_board(filename, board):
     '''Save the current game to a file.'''
     # Put file writing code here.
+    with open('board.json', 'w') as f:
+        json.dump(board, f)
+
 
 def display_board(board):
     '''Display a Tic-Tac-Toe board on the screen in a user-friendly way.'''
     # Put display code here.
+
+    print(board[1] + '|'+  board[2] + '|' + board[3])
+    print("---+---+---")
+    print(board[4] + '|'+  board[5] + '|' + board[6])
+    print("---+---+---")
+    print(board[7] + '|'+  board[8] + '|' + board[9])
+    return
+
+
+
 
 def is_x_turn(board):
     '''Determine whose turn it is.'''

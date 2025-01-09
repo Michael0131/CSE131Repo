@@ -11,6 +11,7 @@
 
 import json
 import time
+import keyboard
 
 # The characters used in the Tic-Tac-Too board.
 # These are constants and therefore should never have to change.
@@ -28,9 +29,9 @@ blank_board = {
                 BLANK, BLANK, BLANK ]
         }
 
-game_board = {'1': ' ' , '2': ' ' , '3': ' ' ,
-            '4': ' ' , '5': ' ' , '6': ' ' ,
-            '7': ' ' , '8': ' ' , '9': ' ' }
+game_board = {'0': ' ' , '1': ' ' , '2': ' ' ,
+            '3': ' ' , '4': ' ' , '5': ' ' ,
+            '6': ' ' , '7': ' ' , '8': ' ' }
 
 def read_board(filename):
     '''Read the previously existing board from the file if it exists.'''
@@ -48,15 +49,13 @@ def read_board(filename):
         data = json.load(file)
 
     print("File found successfully!!")
-
-    if FileNotFoundError:
-        print(f"Error: File {file_name} not found.")
-        time.sleep(3)
-        exit()
-        
+     
     return blank_board['board']
 
 def save_board(filename, board):
+
+    if keyboard.read_key() == 'q':
+        game_done = True
     '''Save the current game to a file.'''
     # Put file writing code here.
     with open('board.json', 'w') as f:
@@ -67,25 +66,47 @@ def display_board(board):
     '''Display a Tic-Tac-Toe board on the screen in a user-friendly way.'''
     # Put display code here.
 
-    print(board[1] + '|'+  board[2] + '|' + board[3])
+    print(board[0] + '|'+  board[1] + '|' + board[2])
     print("---+---+---")
-    print(board[4] + '|'+  board[5] + '|' + board[6])
+    print(board[3] + '|'+  board[4] + '|' + board[5])
     print("---+---+---")
-    print(board[7] + '|'+  board[8] + '|' + board[9])
+    print(board[6] + '|'+  board[7] + '|' + board[8])
     return
-
-
 
 
 def is_x_turn(board):
     '''Determine whose turn it is.'''
     # Put code here determining if it is X's turn.
-    return True
 
+
+    #set the counter to 0
+    square_count = 0
+
+    # check for filled squares and add to count
+    for square in board:
+        if square != BLANK:
+            square_count += 1
+    
+    # use mod to see if its X or O's turn
+    if square_count % 2 == 0:
+        return "X"
+        
+    else:
+        return "O"
+        
 def play_game(board):
     '''Play the game of Tic-Tac-Toe.'''
     # Put game play code here. Return False when the user has indicated they are done.
-    return False
+    
+    game_done = False
+
+    while game_done != True:
+
+        read_board(board)
+
+        display_board(board)
+
+
 
 def game_done(board, message=False):
     '''Determine if the game is finished.
@@ -137,5 +158,8 @@ print(" 4 | 5 | 6 ")
 print("---+---+---")
 print(" 7 | 8 | 9 \n")
 print("The current board is:")
+
+
+
 
 # The file read code, game loop code, and file close code goes here.

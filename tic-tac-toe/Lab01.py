@@ -33,24 +33,6 @@ game_board = {'0': ' ' , '1': ' ' , '2': ' ' ,
             '3': ' ' , '4': ' ' , '5': ' ' ,
             '6': ' ' , '7': ' ' , '8': ' ' }
 
-def read_board(filename):
-    '''Read the previously existing board from the file if it exists.'''
-
-    # request file name
-    file_name = input("Enter the file name to open: ")
-
-    # see if file name provided contains ".json" if not, add it to the end
-    if not file_name.endswith(".json"):
-        file_name += ".json"
-    # Put file reading code here.
-
-    #open the file path
-    with open(file_name, 'r') as file:
-        data = json.load(file)
-
-    print("File found successfully!!")
-     
-    return blank_board['board']
 
 def save_board(filename, board):
 
@@ -163,3 +145,21 @@ print("The current board is:")
 
 
 # The file read code, game loop code, and file close code goes here.
+def read_board(filename):
+    '''Read the previously existing board from the file if it exists.'''
+
+    # request file name
+    file_name = input("Enter the file name to open: ")
+
+    # see if file name provided contains ".json" if not, add it to the end
+    if not file_name.endswith(".json"):
+        file_name += ".json"
+    # Put file reading code here.
+
+    #open the file path
+    with open(file_name, 'r') as file:
+        data = json.load(file)
+
+    print("File found successfully!!")
+     
+    return blank_board['board']

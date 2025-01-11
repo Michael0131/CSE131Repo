@@ -9,7 +9,7 @@
 #      I personally think that sometimes it can be harder to work off of someone elses work, rather than doing the project completely as your own code.
 #      Other than that, this lab was pretty straight forward 
 # 5. How long did it take for you to complete the assignment?
-#      This took me 3 hours. Although I could have done it in about 2 if I only followed the instructions, instead of going though and making it more visually appealing.
+#      his took me 3 hours. Although I could have done it in about 2 if I only followed the instructions, instead of going though and making it more visually appealing.
 #      Without making more bugs. 
 
 import json

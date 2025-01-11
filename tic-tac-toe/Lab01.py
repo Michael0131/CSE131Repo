@@ -78,6 +78,7 @@ def play_game(board):
 
     while True:
         # start the game by displaying the board
+        os.system('cls')
         display_instructions()
         display_board(board)
 
@@ -89,6 +90,13 @@ def play_game(board):
         print(f"{current_player}'s turn. Enter a number (1-9) or 'q' to quit:")
         # have user input in the required format
         move = input("> ")
+
+         # convert player input to lower and if its 'q' close game
+        if move.lower() == 'q':
+            print("Please wait while we save your game :)")
+            time.sleep(2)
+            save_board(file_name, board)
+            exit() # end/close the game
         
         # see if input is a number and within the bounds, if not show error, but allow re entry
         if not move.isdigit() or int(move) < 1 or int(move) > 9:
@@ -97,13 +105,6 @@ def play_game(board):
             time.sleep(2)
             os.system('cls')
             continue
-
-        # convert player input to lower and if its 'q' close game
-        if move.lower() == 'q':
-            print("Please wait while we save your game :)")
-            time.sleep(2)
-            save_board(file_name, board)
-            exit() # end/close the game
 
         # get the position, and format it for the index
         position = int(move) - 1

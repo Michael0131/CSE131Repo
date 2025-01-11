@@ -10,6 +10,8 @@
 #      -total time in hours including reading the assignment and submitting the program-
 
 import json
+import time
+import os
 
 # The characters used in the Tic-Tac-Too board.
 # These are constants and therefore should never have to change.
@@ -35,7 +37,7 @@ def read_board(filename):
     # if it cant find it just return a blank board
 
     try:
-        with json.open("tictactoe.json", 'r') as file:
+        with open("tictactoe.json", 'r') as file:
             data = json.load(file)
         return data['board']
     except (FileNotFoundError):
@@ -46,7 +48,7 @@ def save_board(filename, board):
     # Put file writing code here.
 
     # open the tictactoe.json file and write to it the board
-    with json.open("tictactoe.json", "w") as file:
+    with open("tictactoe.json", "w") as file:
         json.dump({'board': board}, file)
 
 def display_board(board):
@@ -89,10 +91,18 @@ def play_game(board):
         
         # convert player input to lower and if its 'q' close game
         if move.lower() == 'q':
-            return True # end/close the game
+            os.system('cls')
+            print("Please wait while we save your game :)")
+            time.sleep(2)
+            save_board(file_name, board)
+            os.system('cls')
+            exit() # end/close the game
+
+        else:
+            os.system('cls')
         
         # see if input is a number and within the bounds, if not show error, but allow re entry
-        if not move.isdigit() or move < 1 or move > 9:
+        if not move.isdigit() or int(move) < 1 or int(move) > 9:
             print("ERROR! Invalid Input: Chose a number from (1-9)")
             continue
 
@@ -100,7 +110,7 @@ def play_game(board):
         position = int(move) - 1
 
         #check if position is empty, if not alrt user and allow re entry
-        if position != BLANK:
+        if board[position] != BLANK:
             print("This space is full, chose another!")
             continue
 
@@ -123,6 +133,7 @@ def game_done(board, message=False):
     for row in range(3):
         if board[row * 3] != BLANK and board[row * 3] == board[row * 3 + 1] == board[row * 3 + 2]:
             if message:
+                os.system('cls')
                 print("The game was won by", board[row * 3])
             return True
 
@@ -130,13 +141,16 @@ def game_done(board, message=False):
     for col in range(3):
         if board[col] != BLANK and board[col] == board[3 + col] == board[6 + col]:
             if message:
+                os.system('cls')
                 print("The game was won by", board[col])
+                time.sleep(2)
             return True
 
     # Game is finished if someone has a diagonal.
     if board[4] != BLANK and (board[0] == board[4] == board[8] or
                               board[2] == board[4] == board[6]):
         if message:
+            os.system('cls')
             print("The game was won by", board[4])
         return True
 
@@ -155,6 +169,7 @@ def game_done(board, message=False):
 
 # These user-instructions are provided and do not need to be changed.
 
+os.system('cls')
 
 print("Enter 'q' to suspend your game. Otherwise, enter a number from 1 to 9")
 print("where the following numbers correspond to the locations on the grid:")
@@ -177,30 +192,18 @@ active_game = True
 
 while active_game:
 
-    # load the board, if one isn't found a blank one will be made
-    # because of read_board
-    display_board(board)
-
-    #now that board is loaded, start playing the game
-
+    #start playing the game
     active_game = play_game(board)
 
     #now that players can do moves must see if game is won
     # if it is, reset board, if player doesnt want to, they have the 'q' option
-    if game_done(board, message = False):
-        #reset the board
-        print("Reseting game, if you don't want to continue, press 'q' :) ")
+    if game_done(board, message = True):
+        print("")
         board = blank_board['board']
         #then since there isn't really a reason to save a won game
-        # clear it and write over it
+        #write over it
         save_board(file_name, board)
         break
-    # Save the game if the user quit
-if active_game:
-    save_board(file_name, board)
-    print("Your game has been saved. See you next time!! :) ")
-else:
-    print("Game over! Thanks for playing.")
 
 
 

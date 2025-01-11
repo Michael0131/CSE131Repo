@@ -1,13 +1,16 @@
 # 1. Name:
-#      -your name-
+#      Michael Johnson
 # 2. Assignment Name:
 #      Lab 01: Tic-Tac-Toe
 # 3. Assignment Description:
 #      Play the game of Tic-Tac-Toe
 # 4. What was the hardest part? Be as specific as possible.
-#      -a paragraph or two about how the assignment went for you-
+#      The hardest part was just taking someone else's code, understanding it, and completing the assignmnent
+#      I personally think that sometimes it can be harder to work off of someone elses work, rather than doing the project completely as your own code.
+#      Other than that, this lab was pretty straight forward 
 # 5. How long did it take for you to complete the assignment?
-#      -total time in hours including reading the assignment and submitting the program-
+#      This took me 3 hours. Although I could have done it in about 2 if I only followed the instructions, instead of going though and making it more visually appealing.
+#      Without making more bugs. 
 
 import json
 import time

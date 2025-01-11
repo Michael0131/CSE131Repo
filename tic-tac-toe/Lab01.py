@@ -37,7 +37,7 @@ def read_board(filename):
     # if it cant find it just return a blank board
 
     try:
-        with open("tictactoe.json", 'r') as file:
+        with open("tic-tac-toe/tictactoe.json", 'r') as file:
             data = json.load(file)
         return data['board']
     except (FileNotFoundError):
@@ -48,7 +48,7 @@ def save_board(filename, board):
     # Put file writing code here.
 
     # open the tictactoe.json file and write to it the board
-    with open("tictactoe.json", "w") as file:
+    with open("tic-tac-toe/tictactoe.json", "w") as file:
         json.dump({'board': board}, file)
 
 def display_board(board):
@@ -78,6 +78,7 @@ def play_game(board):
 
     while True:
         # start the game by displaying the board
+        display_instructions()
         display_board(board)
 
         # get what players turn it is
@@ -89,6 +90,12 @@ def play_game(board):
         # have user input in the required format
         move = input("> ")
         
+        # see if input is a number and within the bounds, if not show error, but allow re entry
+        if not move.isdigit() or int(move) < 1 or int(move) > 9:
+            print("ERROR! Invalid Input: Chose a number from (1-9)")
+            time.sleep(2)
+            continue
+
         # convert player input to lower and if its 'q' close game
         if move.lower() == 'q':
             os.system('cls')
@@ -97,14 +104,8 @@ def play_game(board):
             save_board(file_name, board)
             os.system('cls')
             exit() # end/close the game
-
         else:
             os.system('cls')
-        
-        # see if input is a number and within the bounds, if not show error, but allow re entry
-        if not move.isdigit() or int(move) < 1 or int(move) > 9:
-            print("ERROR! Invalid Input: Chose a number from (1-9)")
-            continue
 
         # get the position, and format it for the index
         position = int(move) - 1
@@ -120,6 +121,7 @@ def play_game(board):
         if game_done(board, message = False):
             display_board(board)
             return False # end the game
+
     
 
 def game_done(board, message=False):
@@ -135,6 +137,7 @@ def game_done(board, message=False):
             if message:
                 os.system('cls')
                 print("The game was won by", board[row * 3])
+                time.sleep(3)
             return True
 
     # Game is finished if someone has completed a column.
@@ -152,6 +155,7 @@ def game_done(board, message=False):
         if message:
             os.system('cls')
             print("The game was won by", board[4])
+            time.sleep(2)
         return True
 
     # Game is finished if all the squares are filled.
@@ -161,7 +165,9 @@ def game_done(board, message=False):
             tie = False
     if tie:
         if message:
+            os.system('cls')
             print("The game is a tie!")
+            time.sleep(2)
         return True
 
 
@@ -169,16 +175,17 @@ def game_done(board, message=False):
 
 # These user-instructions are provided and do not need to be changed.
 
-os.system('cls')
-
-print("Enter 'q' to suspend your game. Otherwise, enter a number from 1 to 9")
-print("where the following numbers correspond to the locations on the grid:")
-print(" 1 | 2 | 3 ")
-print("---+---+---")
-print(" 4 | 5 | 6 ")
-print("---+---+---")
-print(" 7 | 8 | 9 \n")
-print("The current board is:")
+#make this a function to call easier
+def display_instructions():
+    os.system('cls')
+    print("Enter 'q' to suspend your game. Otherwise, enter a number from 1 to 9")
+    print("where the following numbers correspond to the locations on the grid:")
+    print(" 1 | 2 | 3 ")
+    print("---+---+---")
+    print(" 4 | 5 | 6 ")
+    print("---+---+---")
+    print(" 7 | 8 | 9 \n")
+    print("The current board is:")
 
 # The file read code, game loop code, and file close code goes here.
 
@@ -193,17 +200,37 @@ active_game = True
 while active_game:
 
     #start playing the game
+    display_instructions()
     active_game = play_game(board)
 
-    #now that players can do moves must see if game is won
+    # now that players can do moves must see if game is won
     # if it is, reset board, if player doesnt want to, they have the 'q' option
     if game_done(board, message = True):
-        print("")
+
+        #once game is done let player know game is resetting
+        os.system('cls')
+        print("Resetting Game. Please wait...")
+        time.sleep(2)
+        os.system('cls')
+        
+        #reset the board
         board = blank_board['board']
-        #then since there isn't really a reason to save a won game
-        #write over it
+        #write over the last game and save
         save_board(file_name, board)
-        break
+
+        #notify user that game is ready
+        os.system('cls')
+        print("The game has been reset. Start playing again!")
+        time.sleep(2)
+        os.system('cls') 
+
+        #show the instructions again and the new board
+        display_instructions()
+        display_board(board)
+        active_game = play_game(board)
+
+
+        
 
 
 

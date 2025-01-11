@@ -30,87 +30,25 @@ blank_board = {
 def read_board(filename):
     '''Read the previously existing board from the file if it exists.'''
     # Put file reading code here.
-
-    # try and read from the file "tictactoe.json" 
-    # if it cant find it just return a blank board
-
-    try:
-        with json.open("tictactoe.json", 'r') as file:
-            data = json.load(file)
-        return data['board']
-    except (FileNotFoundError):
-        return blank_board['board']
+    return blank_board['board']
 
 def save_board(filename, board):
     '''Save the current game to a file.'''
     # Put file writing code here.
 
-    # open the tictactoe.json file and write to it the board
-    with json.open("tictactoe.json", "w") as file:
-        json.dump({'board': board}, file)
-
 def display_board(board):
     '''Display a Tic-Tac-Toe board on the screen in a user-friendly way.'''
     # Put display code here.
 
-    print(f" {board[0]} | {board[1]} | {board[2]} ")
-    print("---+---+---")
-    print(f" {board[3]} | {board[4]} | {board[5]} ")
-    print("---+---+---")
-    print(f" {board[6]} | {board[7]} | {board[8]} ")
-
 def is_x_turn(board):
     '''Determine whose turn it is.'''
     # Put code here determining if it is X's turn.
-
-    # get the count of x and 0, when they have the same number its x's turn
-    # if o has less than it is o's turn, etc.
-    x_count = board.count(X)
-    o_count = board.count(O)
-    if x_count == o_count:
-        return True
+    return True
 
 def play_game(board):
     '''Play the game of Tic-Tac-Toe.'''
     # Put game play code here. Return False when the user has indicated they are done.
-
-    while True:
-        # start the game by displaying the board
-        display_board(board)
-
-        # get what players turn it is
-        # if is_x_turn is true than its X's turn, otherwise it is O's turn
-        current_player = X if is_x_turn(board) else O
-
-        #get the current players input
-        print(f"{current_player}'s turn. Enter a number (1-9) or 'q' to quit:")
-        # have user input in the required format
-        move = input("> ")
-        
-        # convert player input to lower and if its 'q' close game
-        if move.lower() == 'q':
-            return True # end/close the game
-        
-        # see if input is a number and within the bounds, if not show error, but allow re entry
-        if not move.isdigit() or move < 1 or move > 9:
-            print("ERROR! Invalid Input: Chose a number from (1-9)")
-            continue
-
-        # get the position, and format it for the index
-        position = int(move) - 1
-
-        #check if position is empty, if not alrt user and allow re entry
-        if position != BLANK:
-            print("This space is full, chose another!")
-            continue
-
-        #set board position to current player
-        board[position] = current_player
-
-        if game_done(board, message = False):
-            display_board(board)
-            return False # end the game
-    
+    return False
 
 def game_done(board, message=False):
     '''Determine if the game is finished.
@@ -154,8 +92,6 @@ def game_done(board, message=False):
     return False
 
 # These user-instructions are provided and do not need to be changed.
-
-
 print("Enter 'q' to suspend your game. Otherwise, enter a number from 1 to 9")
 print("where the following numbers correspond to the locations on the grid:")
 print(" 1 | 2 | 3 ")
@@ -166,41 +102,3 @@ print(" 7 | 8 | 9 \n")
 print("The current board is:")
 
 # The file read code, game loop code, and file close code goes here.
-
-
-
-# check tic tac toe file and load if available
-file_name = "tictactoe.json"
-board = read_board(file_name)
-
-active_game = True
-
-while active_game:
-
-    # load the board, if one isn't found a blank one will be made
-    # because of read_board
-    display_board(board)
-
-    #now that board is loaded, start playing the game
-
-    active_game = play_game(board)
-
-    #now that players can do moves must see if game is won
-    # if it is, reset board, if player doesnt want to, they have the 'q' option
-    if game_done(board, message = False):
-        #reset the board
-        print("Reseting game, if you don't want to continue, press 'q' :) ")
-        board = blank_board['board']
-        #then since there isn't really a reason to save a won game
-        # clear it and write over it
-        save_board(file_name, board)
-        break
-    # Save the game if the user quit
-if active_game:
-    save_board(file_name, board)
-    print("Your game has been saved. See you next time!! :) ")
-else:
-    print("Game over! Thanks for playing.")
-
-
-

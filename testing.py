@@ -6,3 +6,4 @@ for char in chars:
     count +=1
 
 print(count)
+

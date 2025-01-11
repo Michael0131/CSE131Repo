@@ -92,20 +92,18 @@ def play_game(board):
         
         # see if input is a number and within the bounds, if not show error, but allow re entry
         if not move.isdigit() or int(move) < 1 or int(move) > 9:
+            os.system('cls')
             print("ERROR! Invalid Input: Chose a number from (1-9)")
             time.sleep(2)
+            os.system('cls')
             continue
 
         # convert player input to lower and if its 'q' close game
         if move.lower() == 'q':
-            os.system('cls')
             print("Please wait while we save your game :)")
             time.sleep(2)
             save_board(file_name, board)
-            os.system('cls')
             exit() # end/close the game
-        else:
-            os.system('cls')
 
         # get the position, and format it for the index
         position = int(move) - 1
@@ -135,7 +133,6 @@ def game_done(board, message=False):
     for row in range(3):
         if board[row * 3] != BLANK and board[row * 3] == board[row * 3 + 1] == board[row * 3 + 2]:
             if message:
-                os.system('cls')
                 print("The game was won by", board[row * 3])
                 time.sleep(3)
             return True
@@ -144,7 +141,6 @@ def game_done(board, message=False):
     for col in range(3):
         if board[col] != BLANK and board[col] == board[3 + col] == board[6 + col]:
             if message:
-                os.system('cls')
                 print("The game was won by", board[col])
                 time.sleep(2)
             return True
@@ -153,7 +149,6 @@ def game_done(board, message=False):
     if board[4] != BLANK and (board[0] == board[4] == board[8] or
                               board[2] == board[4] == board[6]):
         if message:
-            os.system('cls')
             print("The game was won by", board[4])
             time.sleep(2)
         return True
@@ -165,7 +160,6 @@ def game_done(board, message=False):
             tie = False
     if tie:
         if message:
-            os.system('cls')
             print("The game is a tie!")
             time.sleep(2)
         return True
@@ -177,7 +171,6 @@ def game_done(board, message=False):
 
 #make this a function to call easier
 def display_instructions():
-    os.system('cls')
     print("Enter 'q' to suspend your game. Otherwise, enter a number from 1 to 9")
     print("where the following numbers correspond to the locations on the grid:")
     print(" 1 | 2 | 3 ")
@@ -200,7 +193,6 @@ active_game = True
 while active_game:
 
     #start playing the game
-    display_instructions()
     active_game = play_game(board)
 
     # now that players can do moves must see if game is won
@@ -208,10 +200,9 @@ while active_game:
     if game_done(board, message = True):
 
         #once game is done let player know game is resetting
-        os.system('cls')
+    
         print("Resetting Game. Please wait...")
         time.sleep(2)
-        os.system('cls')
         
         #reset the board
         board = blank_board['board']
@@ -219,10 +210,10 @@ while active_game:
         save_board(file_name, board)
 
         #notify user that game is ready
-        os.system('cls')
+    
         print("The game has been reset. Start playing again!")
         time.sleep(2)
-        os.system('cls') 
+        
 
         #show the instructions again and the new board
         display_instructions()

@@ -1,3 +1,20 @@
+# 1. Name:
+#      -Michael Johnson
+# 2. Assignment Name:
+#      Lab 03: Calendar
+# 3. Assignment Description:
+#      This program will take a users input, a month and a year, and as long as it follows the rules a formated calander will be shown in the terminal. 
+# 4. What was the hardest part? Be as specific as possible.
+#      The hardest part of this assignment for me was dealing with the input validation and ensuring the program handled edge cases properly. 
+#      I needed to make sure that the program would only accept valid inputs for both the month and the year while also providing meaningful 
+#      feedback to the user when the input was incorrect. It was a bit tricky to structure the loops without using break or continue, especially 
+#      when I had to make sure the program would keep prompting the user until the input was valid. I had to find a way to ensure that the input 
+#      was properly validated without making the code overly complicated or difficult to follow.
+# 5. How long did it take for you to complete the assignment?
+#      This took me about 3 hours, from reading the intructions, converting my structure chart to code, and doing the test cases. 
+
+
+
 from dataclasses import dataclass
 import os
 from time import sleep

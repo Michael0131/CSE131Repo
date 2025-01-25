@@ -98,11 +98,11 @@ def main():
             if month < 1 or month > 12:
                 os.system('cls')
                 print("ERROR: Month must be between 1 and 12.")
-                sleep(2)
+                sleep(1)
         except ValueError:
             os.system('cls')
             print("ERROR: Month must be an integer.")
-            sleep(2)
+            sleep(1)
 
     # Get valid year input (>= 1753)
     os.system('cls')
@@ -113,11 +113,11 @@ def main():
             if year < 1753:
                 os.system('cls')
                 print("ERROR: Year must be 1753 or later.")
-                sleep(2)
+                sleep(1)
         except ValueError:
             os.system('cls')
             print("ERROR: Year must be an integer.")
-            sleep(2)
+            sleep(1)
 
     # Get the starting day of the week for the 1st of the month
     dow = compute_offset(month, year)

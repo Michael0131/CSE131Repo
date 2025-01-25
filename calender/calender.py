@@ -1,3 +1,7 @@
+
+import os
+from time import sleep
+
 # Function to check if a year is a leap year
 def is_leap_year(year):
     return (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0))
@@ -37,28 +41,29 @@ def compute_offset(month, year):
 # Function to display the calendar for the given month and year
 def display_table(num_days, dow):
     # Table header with proper formatting
-    print(" Su  Mo  Tu  We  Th  Fr  Sa ")
-    
+    # Clearing the Screen
+    os.system('cls')
+    print(" Su  Mo  Tu  We  Th  Fr  Sa")
+
     # Print leading spaces for the first week if dow is not zero
     for i in range(dow):
-        print("   ", end="")
+        print("    ", end="")
 
     # Print the days of the month
     for dom in range(1, num_days + 1):
         # Print day number with consistent width
-        print(f"{dom:3}", end=" ")
-        
+        print(f"{dom:>3}", end=" ")
+
         # Increment the day of the week (dow)
         dow += 1
-        
+
         # If we reach the end of the week (Saturday), move to the next line
         if dow % 7 == 0:
             print()  # Start a new line after Saturday
-            dow = 0  # Reset dow to Sunday
-    
+
     # Ensure the last line is complete if necessary
-    if dow != 0:
-        print()
+    if dow % 7 != 0:
+        print()  # Print a newline if the last row is incomplete
 
 
 
@@ -67,31 +72,47 @@ def main():
     # Get valid month input
     while True:
         try:
+            # Clearing the Screen
+            os.system('cls')
             month = int(input("Enter the month number: "))
             if month < 1 or month > 12:
-                print("Month must be between 1 and 12.")
+                # Clearing the Screen
+                os.system('cls')
+                print("ERROR: Month must be between 1 and 12.")
+                sleep(2)
             else:
                 break
         except ValueError:
-            print("Month must be an integer and between 1 and 12.")
+            # Clearing the Screen
+            os.system('cls')
+            print("ERROR: Month must be an integer and between 1 and 12.")
+            sleep(2)
 
     # Get valid year input
     while True:
         try:
+            # Clearing the Screen
+            os.system('cls')
             year = int(input("Enter year: "))
             if year < 1753:
-                print("Year must be 1753 or later.")
+                # Clearing the Screen
+                os.system('cls')
+                print("ERROR: Year must be 1753 or later.")
+                sleep(2)
             else:
                 break
         except ValueError:
-            print("Year must be an integer.")
+            # Clearing the Screen
+            os.system('cls')
+            print("ERROR: Year must be an integer.")
+            sleep(2)
     
     # Get the starting day of the week for the 1st of the month
     dow = compute_offset(month, year)
     
     # Get the number of days in the month
     _, num_days = calculate_days_since_1753(month, year)
-    
+    os.system('cls')
     # Display the calendar table
     display_table(num_days, dow)
 

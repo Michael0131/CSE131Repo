@@ -1,120 +1,133 @@
-
+from dataclasses import dataclass
 import os
 from time import sleep
 
-# Function to check if a year is a leap year
+#create data class for month
+@dataclass
+class Month:
+    name: str
+    days: int
+
+# dictionary to hold month number, name, and day count
+months = {
+    1: Month("January", 31),
+    2: Month("February", 28),  # this will change if there is a leap year, 28 or 29 days
+    3: Month("March", 31),
+    4: Month("April", 30),
+    5: Month("May", 31),
+    6: Month("June", 30),
+    7: Month("July", 31),
+    8: Month("August", 31),
+    9: Month("September", 30),
+    10: Month("October", 31),
+    11: Month("November", 30),
+    12: Month("December", 31),
+}
+
+# this function will check if the year is a leap year, and then return true or false to be used later
 def is_leap_year(year):
     return (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0))
 
-# Function to calculate the number of days since January 1, 1753
+# this calculates the days since January 1, 1753, since that is the earlies the program will go, we can reference it.
 def calculate_days_since_1753(month, year):
-    # Days in each month (normal year)
-    days_in_month = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
-    
-    # Adjust February for leap year
+    # adjust february if it was a leap year
     if is_leap_year(year):
-        days_in_month[2] = 29
-    
+        months[2].days = 29
+    else:
+        months[2].days = 28
+
     total_days = 0
-    
-    # Add days for each year between 1753 and the given year
+
+    # go through each year between 1753 and input year and add the days
+    # this will account for leap years as well
     for y in range(1753, year):
         total_days += 365
         if is_leap_year(y):
             total_days += 1
-    
-    # Add days for the months of the current year up to the target month
-    for m in range(1, month):
-        total_days += days_in_month[m]
-    
-    return total_days, days_in_month[month]
 
-# Function to compute the day of the week (0 = Sunday, 6 = Saturday)
+    # go through and add the days for the months of the current year up to the target month
+    for m in range(1, month):
+        total_days += months[m].days
+
+    return total_days, months[month].days
+
+# this function will compute the day of the week (0 = Sunday, 6 = Saturday)
 def compute_offset(month, year):
     total_days, _ = calculate_days_since_1753(month, year)
-    
     # January 1, 1753 was a Monday, which corresponds to day 1
     day_of_week = (total_days + 1) % 7  # 1 because Jan 1, 1753 is Monday (day 1)
-    
     return day_of_week
 
-# Function to display the calendar for the given month and year
-def display_table(num_days, dow):
-    # Table header with proper formatting
-    # Clearing the Screen
-    os.system('cls')
+# this functino will format our calender for displaying based on input month and year
+def display_table(month, year, num_days, dow):
+    # create the table header with month and year
+    month_name = months[month].name
+    print("")
+    print(f"Calendar for {month_name}, {year}")
+    print("")
     print(" Su  Mo  Tu  We  Th  Fr  Sa")
 
-    # Print leading spaces for the first week if dow is not zero
-    for i in range(dow):
+    # print leading spaces for the first week if dow is not zero
+    for _ in range(dow):
         print("    ", end="")
 
-    # Print the days of the month
+    # print the days of the month
     for dom in range(1, num_days + 1):
-        # Print day number with consistent width
+        # print day number with consistent width, so they are aligned properly
         print(f"{dom:>3}", end=" ")
 
-        # Increment the day of the week (dow)
+        # increment the day of the week (dow)
         dow += 1
 
-        # If we reach the end of the week (Saturday), move to the next line
+        # if we reach the end of the week (Saturday), move to the next line
         if dow % 7 == 0:
-            print()  # Start a new line after Saturday
+            print()
 
     # Ensure the last line is complete if necessary
     if dow % 7 != 0:
         print()  # Print a newline if the last row is incomplete
+    print("")
 
-
-
-# Main function to take user input and display the calendar
 def main():
-    # Get valid month input
-    while True:
+    # Get valid month input (1-12)
+    os.system('cls')
+    month = 0
+    while month < 1 or month > 12:
         try:
-            # Clearing the Screen
-            os.system('cls')
-            month = int(input("Enter the month number: "))
+            month = int(input("Enter a Month (1-12): "))
             if month < 1 or month > 12:
-                # Clearing the Screen
                 os.system('cls')
                 print("ERROR: Month must be between 1 and 12.")
                 sleep(2)
-            else:
-                break
         except ValueError:
-            # Clearing the Screen
             os.system('cls')
-            print("ERROR: Month must be an integer and between 1 and 12.")
+            print("ERROR: Month must be an integer.")
             sleep(2)
 
-    # Get valid year input
-    while True:
+    # Get valid year input (>= 1753)
+    os.system('cls')
+    year = 0
+    while year < 1753:
         try:
-            # Clearing the Screen
-            os.system('cls')
-            year = int(input("Enter year: "))
+            year = int(input("Enter a Year (1753 or Later): "))
             if year < 1753:
-                # Clearing the Screen
                 os.system('cls')
                 print("ERROR: Year must be 1753 or later.")
                 sleep(2)
-            else:
-                break
         except ValueError:
-            # Clearing the Screen
             os.system('cls')
             print("ERROR: Year must be an integer.")
             sleep(2)
-    
+
     # Get the starting day of the week for the 1st of the month
     dow = compute_offset(month, year)
-    
+
     # Get the number of days in the month
     _, num_days = calculate_days_since_1753(month, year)
+    
     os.system('cls')
     # Display the calendar table
-    display_table(num_days, dow)
+    display_table(month, year, num_days, dow)
 
 # Run the program
 if __name__ == "__main__":

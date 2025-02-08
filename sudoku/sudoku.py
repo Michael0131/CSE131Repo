@@ -1,3 +1,17 @@
+# 1. Name:
+#      -Michael Johnson-
+# 2. Assignment Name:
+#      Lab 05 : Sudoku Draft
+# 3. Assignment Description:
+#      -This program plays the game of sudoku-
+# 4. What was the hardest part? Be as specific as possible.
+#      One of the most challenging parts was handling user input validation properly. Ensuring that moves were formatted correctly, 
+# numbers were within valid ranges, and the player wasn’t overwriting pre-filled cells required multiple checks. Initially, the program 
+# relied on break and continue statements, but I refactored it to use pure conditional logic for cleaner flow.
+# 5. How long did it take for you to complete the assignment?
+#      -3-
+
+
 import json
 import os
 import time

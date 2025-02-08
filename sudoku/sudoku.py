@@ -38,13 +38,12 @@ def save_game(choice, board):
     '''
     # Construct the filename again based on difficulty level
     file_name = f"{choice}.json"
-    file_path = os.path.join(os.path.dirname(__file__), "games", file_name)
 
     # Prepare the data to be saved as a dictionary with the board inside
     data = {'board': board}
     try:
         # Open the file for writing, and save the current state of the board
-        with open(file_path, 'w') as file:
+        with open(f"sudoku/{choice}", 'w') as file:
             json.dump(data, file, indent=4)  # Write data as formatted JSON
         print("Game saved successfully!")  # Confirmation message
     except IOError:
@@ -143,14 +142,13 @@ def main():
     '''
     Main function to manage the game setup, execution, and returning to the main menu.
     '''
-    game_active = True  # Flag to manage the game session
-    while game_active:
+    while True:  # Keep looping until the player chooses to quit
         # Ask the player for their choice of difficulty or to quit
         choice = input("Enter a difficulty (Easy, Medium, Hard) or 'quit' to exit: ").capitalize()
         
         if choice.lower() == "quit":
             print("Exiting Sudoku. Goodbye!")  # Inform the player they are quitting
-            game_active = False  # Stop the game loop (end the game session)
+            break  # Exit the loop completely
 
         else:
             # Try to load the board for the selected difficulty
@@ -161,6 +159,7 @@ def main():
                 play_game(board, choice)  # Start the game with the chosen board
             else:
                 print("Invalid difficulty or file not found. Please try again.")  # Error message if no board is loaded
+
 
 # Run the main function when the script is executed
 if __name__ == "__main__":

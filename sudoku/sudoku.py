@@ -138,20 +138,20 @@ def main():
     '''
     Main function to manage the game setup, execution, and returning to the main menu.
     '''
-    while True:  # Keep looping until the player chooses to quit
+    running = True  # Control the loop logically
+
+    while running:
         choice = input("Enter a difficulty (Easy, Medium, Hard) or 'quit' to exit: ").capitalize()
 
         if choice.lower() == "quit":
             print("Exiting Sudoku. Goodbye!")
-            break  # Exit the loop completely
-
-        board = load_game(choice)
-        if board:
+            running = False  # Stop the loop in the next iteration
+        elif (board := load_game(choice)):  # Load the board and check if it's valid
             display_instructions()
-            if play_game(board, choice):  # If play_game returns True, exit main()
-                break
+            running = not play_game(board, choice)  # If play_game returns True, exit
         else:
             print("Invalid difficulty or file not found. Please try again.")
+
 
 
 # Run the main function when the script is executed

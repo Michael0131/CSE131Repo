@@ -114,22 +114,21 @@ def play_game(board, choice):
     This is the main game loop where the user interacts with the Sudoku board.
     It runs until the user decides to quit or the game ends.
     '''
-    game_active = True  # Flag to keep the game running
-    while game_active:
+    while True:  # Keep looping until the user chooses to quit
         display_board(board)  # Show the current state of the board
         move = input("Enter your move or type 'quit' to exit: ").strip()  # Get the player's input
-        os.system('cls')  # Clear the screen to make the game more interactive
+        os.system('cls')  # Clear the screen
 
         if move.lower() == "quit":
             print("Saving game...")
             save_game(choice, board)  # Save the game before quitting
             print("Thanks for playing!")
-            game_active = False  # Stop the game session but return to the main menu
+            return True  # Return True to signal that the game should fully exit
 
         elif update_board(board, move):
             os.system('cls')  # Clear the screen again after a valid move
             print("Move accepted!")  # Confirmation message
-            time.sleep(1)  # Wait a moment before clearing the screen
+            time.sleep(1)  # Pause before clearing the screen
             os.system('cls')
 
         else:
@@ -143,22 +142,19 @@ def main():
     Main function to manage the game setup, execution, and returning to the main menu.
     '''
     while True:  # Keep looping until the player chooses to quit
-        # Ask the player for their choice of difficulty or to quit
         choice = input("Enter a difficulty (Easy, Medium, Hard) or 'quit' to exit: ").capitalize()
-        
+
         if choice.lower() == "quit":
-            print("Exiting Sudoku. Goodbye!")  # Inform the player they are quitting
+            print("Exiting Sudoku. Goodbye!")
             break  # Exit the loop completely
 
+        board = load_game(choice)
+        if board:
+            display_instructions()
+            if play_game(board, choice):  # If play_game returns True, exit main()
+                break
         else:
-            # Try to load the board for the selected difficulty
-            board = load_game(choice)
-
-            if board:
-                display_instructions()  # Show the game instructions
-                play_game(board, choice)  # Start the game with the chosen board
-            else:
-                print("Invalid difficulty or file not found. Please try again.")  # Error message if no board is loaded
+            print("Invalid difficulty or file not found. Please try again.")
 
 
 # Run the main function when the script is executed

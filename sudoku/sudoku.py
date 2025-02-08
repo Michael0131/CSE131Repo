@@ -36,18 +36,15 @@ def save_game(choice, board):
     Saves the current Sudoku game state (the board) to a file.
     This happens when the player quits the game, so their progress is not lost.
     '''
-    # Construct the filename again based on difficulty level
-    file_name = f"{choice}.json"
+    file_name = f"sudoku/{choice}.json"  # Ensure consistency with load_game()
 
-    # Prepare the data to be saved as a dictionary with the board inside
-    data = {'board': board}
+    data = {'board': board}  # Structure data correctly
+
     try:
-        # Open the file for writing, and save the current state of the board
-        with open(f"sudoku/{choice}", 'w') as file:
-            json.dump(data, file, indent=4)  # Write data as formatted JSON
-        print("Game saved successfully!")  # Confirmation message
+        with open(file_name, 'w') as file:  # Open the correct file
+            json.dump(data, file, indent=4)  # Save as JSON with proper formatting
+        print("Game saved successfully!")  
     except IOError:
-        # Handle any errors that may occur while saving the game
         print("Error saving the game. Please try again.")
 
 def display_board(board):

@@ -59,44 +59,11 @@ def display_board(board):
         print(" ".join(row))
     print()
 
-def is_valid_move(board, move):
+def is_valid_move(board, row, col, num):
     """
     Validates the user's move.
     Ensures proper input format and checks if the move is valid according to Sudoku rules.
     """
-    columns = "ABCDEFGHI"  # Maps column letters (A-I) to indices (0-8)
-    tokens = move.split()  # Split the move into coordinate and number
-
-    if len(tokens) != 2:
-        print("Error: Enter move in the following format 'G5 3'")
-        return False
-
-    raw_coordinate = tokens[0].strip().lower()  # Normalize input to lowercase
-    value = tokens[1].strip()  # The number the user wants to enter
-
-    if len(raw_coordinate) != 2:
-        print("Error: Incorrect coordinate format.")
-        return False
-
-    # Handle both formats (row-column or column-row)
-    if raw_coordinate[0].isdigit() and raw_coordinate[1].isalpha():
-        coordinate = raw_coordinate[1] + raw_coordinate[0]  # If format is '5G', flip it to 'G5'
-    else:
-        coordinate = raw_coordinate  # If format is 'G5', keep it as it is
-
-    if coordinate[0].upper() not in columns or not (1 <= int(coordinate[1]) <= 9):
-        print("Error: Invalid coordinate. Please enter a valid column (A-I) and row (1-9).")
-        return False
-
-    col = columns.find(coordinate[0].upper())  # Convert column letter to index
-    row = int(coordinate[1]) - 1  # Convert row number (1-9) to index (0-8)
-
-    if not value.isdigit() or not (1 <= int(value) <= 9):
-        print("Error: Invalid number. Please enter a number between 1 and 9.")
-        return False
-
-    num = int(value)
-
     # Check if the position is already filled
     if board[row][col] != 0:
         print("That position is already filled. Choose another.")
@@ -124,42 +91,70 @@ def is_valid_move(board, move):
     return True  # If all checks pass, the move is valid
 
 
-def update_board(board, move):
+def update_board(board, coordinate, value):
     """
     Updates the board with the player's move if it's valid.
     """
-    tokens = move.split()
-    raw_coordinate = tokens[0].strip().lower()  # Coordinate (e.g., 'g5')
-    value = tokens[1].strip()  # The number the user wants to enter
+    columns = "ABCDEFGHI"  # Maps column letters (A-I) to indices (0-8)
+    
+    # Normalize input to lowercase
+    coordinate = coordinate.strip().lower()
 
-    col = "ABCDEFGHI".find(raw_coordinate[0].upper())  # Get column index
-    row = int(raw_coordinate[1]) - 1  # Get row index
+    # Handle both formats (row-column or column-row)
+    if coordinate[0].isdigit() and coordinate[1].isalpha():
+        coordinate = coordinate[1] + coordinate[0]  # If format is '5G', flip it to 'G5'
 
-    num = int(value)  # Convert the number to an integer
-    if is_valid_move(board, move):
-        board[row][col] = num  # Update the board
-        return True  # Indicate that the board was successfully updated
+    # Ensure the coordinate is valid
+    if len(coordinate) != 2 or coordinate[0] not in columns or not coordinate[1].isdigit():
+        print("Error: Invalid coordinate. Please enter a valid column (A-I) and row (1-9).")
+        return False
+
+    # Extract row and column from coordinate
+    col = columns.find(coordinate[0].upper())  # Get column index
+    row = int(coordinate[1]) - 1  # Convert row number (1-9) to index (0-8)
+
+    # Validate the value
+    if not value.isdigit() or not (1 <= int(value) <= 9):
+        print("Error: Invalid number. Please enter a number between 1 and 9.")
+        return False
+
+    num = int(value)  # Convert the value to an integer
+
+    # Check if the move is valid according to Sudoku rules
+    if is_valid_move(board, row, col, num):
+        board[row][col] = num  # Update the board with the valid move
+        return True
     else:
-        return False  # If invalid, return False
+        return False  # If the move is invalid, return False
 
 
-def play_game(board, choice):
+def play_game(board):
     """
     Main game loop to interact with the Sudoku board. Continues until the player decides to quit.
     """
     while True:
         display_board(board)  # Show the current state of the board
-        move = input("Enter your move or type 'quit' to exit: ").strip()  # Get the player's input
-        os.system('cls')  # Clear the screen
+        
+        # Ask for the coordinate
+        coordinate = input("Enter the coordinate (e.g., A1, B2, etc.) or 'quit' to exit: ").strip()
 
-        if move.lower() == "quit":
+        if coordinate.lower() == 'quit':
             print("Saving game...")
-            save_game(choice, board)  # Save the game before quitting
+            # save_game(board)  # Save the game before quitting (disabled in this example)
             print("Thanks for playing!")
             return True  # Return True to signal that the game should fully exit
 
-        elif update_board(board, move):
-            os.system('cls')  # Clear the screen again after a valid move
+        # Ensure the coordinate is valid
+        if len(coordinate) < 2:
+            print("Error: Invalid coordinate format. Try again.")
+            continue
+
+        # Ask for the value to be placed in the coordinate
+        value = input(f"Enter the value to place at {coordinate}: ").strip()
+
+        # Update the board with the move
+        if update_board(board, coordinate, value):
+            os.system('cls')  # Clear the screen after a valid move
             print("Move accepted!")  # Confirmation message
             time.sleep(1)  # Pause before clearing the screen
             os.system('cls')
@@ -178,16 +173,13 @@ def main():
     running = True  # Control the loop logically
 
     while running:
-        choice = input("Enter a difficulty (Easy, Medium, Hard) or 'quit' to exit: ").capitalize()
-
-        if choice.lower() == "quit":
-            print("Exiting Sudoku. Goodbye!")
-            running = False  # Stop the loop in the next iteration
-        elif (board := load_game(choice)):  # Load the board and check if it's valid
-            display_instructions()
-            running = not play_game(board, choice)  # If play_game returns True, exit
-        else:
-            print("Invalid difficulty or file not found. Please try again.")
+        # Initial empty board for testing
+        board = [[0 for _ in range(9)] for _ in range(9)]
+        
+        print("Welcome to Sudoku!")
+        
+        # Call the game loop
+        running = not play_game(board)  # If play_game returns True, exit
 
 # Run the main function when the script is executed
 if __name__ == "__main__":

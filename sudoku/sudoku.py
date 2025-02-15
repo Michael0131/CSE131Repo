@@ -1,3 +1,19 @@
+# 1. Name:
+#      Michael Johnson
+# 2. Assignment Name:
+#      Lab 06 : Sudoku Program
+# 3. Assignment Description:
+#      This program allows a user to play the game 'Sudoku' giving them a board and guidance to play the game.
+# 4. What was the hardest part? Be as specific as possible.
+#      The hardest part of testing is_valid_move() was ensuring that the function correctly identified conflicts in the row, column, 
+# and 3x3 grid while handling different edge cases, such as incorrect input formats and out-of-range values. Debugging was challenging 
+# because even when numbers weren’t visibly displayed due to a saving/loading issue, the program still recognized them as present, making 
+# validation trickier. Ensuring the test cases covered enough scenarios without being excessive required balancing thoroughness with simplicity.
+# 5. How long did it take for you to complete the assignment?
+#      3 1/2 hours
+
+
+
 import json
 import os
 import time

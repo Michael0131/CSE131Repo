@@ -1,17 +1,3 @@
-# 1. Name:
-#      -Michael Johnson-
-# 2. Assignment Name:
-#      Lab 05 : Sudoku Draft
-# 3. Assignment Description:
-#      -This program plays the game of sudoku-
-# 4. What was the hardest part? Be as specific as possible.
-#      One of the most challenging parts was handling user input validation properly. Ensuring that moves were formatted correctly, 
-# numbers were within valid ranges, and the player wasn’t overwriting pre-filled cells required multiple checks. Initially, the program 
-# relied on break and continue statements, but I refactored it to use pure conditional logic for cleaner flow.
-# 5. How long did it take for you to complete the assignment?
-#      -3-
-
-
 import json
 import os
 import time
@@ -35,31 +21,22 @@ def load_game(choice):
     Loads the Sudoku board from a file based on the chosen difficulty.
     Each difficulty has its own pre-set puzzle saved as a JSON file.
     '''
-    try:
-        # Try to open and read the JSON file containing the board layout
-        with open(f"sudoku/{choice}.json", 'r') as file:
-            data = json.load(file)  # Parse the JSON data
-        return data['board']  # Return the board from the file
-    except FileNotFoundError:
-        # If the file doesn't exist, print an error message
+    if not os.path.exists(f"sudoku/{choice}.json"):
         print(f"Error: {choice}.json not found.")
         return None  # Return None to indicate the game couldn't be loaded
+    with open(f"sudoku/{choice}.json", 'r') as file:
+        data = json.load(file)  # Parse the JSON data
+    return data['board']  # Return the board from the file
 
 def save_game(choice, board):
     '''
     Saves the current Sudoku game state (the board) to a file.
     This happens when the player quits the game, so their progress is not lost.
     '''
-    file_name = f"sudoku/{choice}.json"  # Ensure consistency with load_game()
-
     data = {'board': board}  # Structure data correctly
-
-    try:
-        with open(file_name, 'w') as file:  # Open the correct file
-            json.dump(data, file, indent=4)  # Save as JSON with proper formatting
-        print("Game saved successfully!")  
-    except IOError:
-        print("Error saving the game. Please try again.")
+    with open(f"sudoku/{choice}.json", 'w') as file:  # Open the correct file
+        json.dump(data, file, indent=4)  # Save as JSON with proper formatting
+    print("Game saved successfully!")
 
 def display_board(board):
     '''
@@ -68,64 +45,109 @@ def display_board(board):
     '''
     print("\n   A B C  D E F   G H I")  # Column labels for reference (A to I)
 
-    # Loop through each row in the board (there are 9 rows)
     for i in range(9):
         if i % 3 == 0 and i != 0:
             print("   -----+-----+-----")  # Add a separator every 3 rows for clarity
         
         row = [str(i + 1)]  # Label each row with its number (1 to 9)
         
-        # Loop through each column in the current row (there are 9 columns)
         for j in range(9):
             if j % 3 == 0 and j != 0:
                 row.append("|")  # Add a separator between every 3 columns
             
-            # Show the value in the cell, replace 0 with a space (empty cell)
-            row.append(str(board[i][j]) if board[i][j] != 0 else " ")  
-        
-        # Print the current row as a string with spaces between cells
+            row.append(str(board[i][j]) if board[i][j] != 0 else " ")  # Show the value in the cell
         print(" ".join(row))
-    print()  # Add a blank line at the end for neatness
+    print()
 
-def update_board(board, move):
-    '''
-    Takes the player's move and updates the board accordingly.
-    The move should be in the format "ColumnRow Number", e.g., "G5 3".
-    '''
-    columns = "ABCDEFGHI"  # This maps column letters (A-I) to indices (0-8)
+def is_valid_move(board, move):
+    """
+    Validates the user's move.
+    Ensures proper input format and checks if the move is valid according to Sudoku rules.
+    """
+    columns = "ABCDEFGHI"  # Maps column letters (A-I) to indices (0-8)
+    tokens = move.split()  # Split the move into coordinate and number
 
-    try:
-        # Split the move into position (e.g., "G5") and number (e.g., "3")
-        position, value = move.split()  
-        col = columns.index(position[0].upper())  # Convert column letter to index
-        row = int(position[1]) - 1  # Convert row number (1-9) to index (0-8)
-        num = int(value)  # Convert the value input to an integer (1-9)
-
-        # Validate the number (it must be between 1 and 9)
-        if num < 1 or num > 9:
-            print("Invalid number. Please enter a number between 1 and 9.")
-            return False
-
-        # Ensure we're not overwriting a pre-filled number (cells with 0 are empty)
-        if board[row][col] != 0:
-            print("That position is already filled. Choose another.")
-            return False
-
-        # If all checks pass, update the board with the new number
-        board[row][col] = num  
-        return True  # Indicate that the board was successfully updated
-
-    except (IndexError, ValueError):
-        # Handle invalid input (e.g., wrong format or out-of-bounds positions)
-        print("Invalid input. Use format: ColumnRow Number (e.g., 'G5 3').")
+    if len(tokens) != 2:
+        print("Error: Enter move in the following format 'G5 3'")
         return False
 
+    raw_coordinate = tokens[0].strip().lower()  # Normalize input to lowercase
+    value = tokens[1].strip()  # The number the user wants to enter
+
+    if len(raw_coordinate) != 2:
+        print("Error: Incorrect coordinate format.")
+        return False
+
+    # Handle both formats (row-column or column-row)
+    if raw_coordinate[0].isdigit() and raw_coordinate[1].isalpha():
+        coordinate = raw_coordinate[1] + raw_coordinate[0]  # If format is '5G', flip it to 'G5'
+    else:
+        coordinate = raw_coordinate  # If format is 'G5', keep it as it is
+
+    if coordinate[0].upper() not in columns or not (1 <= int(coordinate[1]) <= 9):
+        print("Error: Invalid coordinate. Please enter a valid column (A-I) and row (1-9).")
+        return False
+
+    col = columns.find(coordinate[0].upper())  # Convert column letter to index
+    row = int(coordinate[1]) - 1  # Convert row number (1-9) to index (0-8)
+
+    if not value.isdigit() or not (1 <= int(value) <= 9):
+        print("Error: Invalid number. Please enter a number between 1 and 9.")
+        return False
+
+    num = int(value)
+
+    # Check if the position is already filled
+    if board[row][col] != 0:
+        print("That position is already filled. Choose another.")
+        return False
+
+    # Check for uniqueness in the row
+    if num in board[row]:
+        print("Invalid move: Number already exists in the row.")
+        return False
+
+    # Check for uniqueness in the column
+    for i in range(9):
+        if board[i][col] == num:
+            print("Invalid move: Number already exists in the column.")
+            return False
+
+    # Check 3x3 subgrid for conflicts
+    start_row, start_col = (row // 3) * 3, (col // 3) * 3
+    for i in range(start_row, start_row + 3):
+        for j in range(start_col, start_col + 3):
+            if board[i][j] == num:
+                print("Invalid move: Number already exists in the 3x3 block.")
+                return False
+
+    return True  # If all checks pass, the move is valid
+
+
+def update_board(board, move):
+    """
+    Updates the board with the player's move if it's valid.
+    """
+    tokens = move.split()
+    raw_coordinate = tokens[0].strip().lower()  # Coordinate (e.g., 'g5')
+    value = tokens[1].strip()  # The number the user wants to enter
+
+    col = "ABCDEFGHI".find(raw_coordinate[0].upper())  # Get column index
+    row = int(raw_coordinate[1]) - 1  # Get row index
+
+    num = int(value)  # Convert the number to an integer
+    if is_valid_move(board, move):
+        board[row][col] = num  # Update the board
+        return True  # Indicate that the board was successfully updated
+    else:
+        return False  # If invalid, return False
+
+
 def play_game(board, choice):
-    '''
-    This is the main game loop where the user interacts with the Sudoku board.
-    It runs until the user decides to quit or the game ends.
-    '''
-    while True:  # Keep looping until the user chooses to quit
+    """
+    Main game loop to interact with the Sudoku board. Continues until the player decides to quit.
+    """
+    while True:
         display_board(board)  # Show the current state of the board
         move = input("Enter your move or type 'quit' to exit: ").strip()  # Get the player's input
         os.system('cls')  # Clear the screen
@@ -148,10 +170,11 @@ def play_game(board, choice):
             time.sleep(1)  # Give them a moment to read the message
             os.system('cls')
 
+
 def main():
-    '''
+    """
     Main function to manage the game setup, execution, and returning to the main menu.
-    '''
+    """
     running = True  # Control the loop logically
 
     while running:
@@ -165,8 +188,6 @@ def main():
             running = not play_game(board, choice)  # If play_game returns True, exit
         else:
             print("Invalid difficulty or file not found. Please try again.")
-
-
 
 # Run the main function when the script is executed
 if __name__ == "__main__":

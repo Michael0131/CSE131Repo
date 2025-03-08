@@ -1,19 +1,14 @@
 # 1. Name:
-#      -your name-
+#      Michael Johnson
 # 2. Assignment Name:
 #      Lab 09 : Sub-List Sort Program
 # 3. Assignment Description:
-#      -describe what this program is meant to do-
+#      I created a sub-list sort program based on a design description.
 # 4. What was the hardest part? Be as specific as possible.
-#      -a paragraph or two about how the assignment went for you-
+#      the design for this program was strong so the hardest part was chosing test cases that would 
+#      really make sure this program worked and was reliable. 
 # 5. How long did it take for you to complete the assignment?
-#      -total time in hours including reading the assignment and submitting the program-
-
-
-
-
-
-
+#      Between programming, debugging, creating test cases and recording 2 hours
 
 def combine(source, destination, iBegin1, iBegin2, iEnd2):
     ''' 
@@ -132,16 +127,16 @@ def run_tests():
     # Test case 11: Smallest possible size (empty array)
     assert sublist_sort([100]) == [100]
 
-    # New Test Case 12: 20 positive numbers
+    # Test Case 12: 20 positive numbers
     assert sublist_sort([10, 23, 5, 17, 42, 90, 32, 50, 67, 8, 12, 4, 99, 65, 1, 34, 11, 44, 26, 9]) == [1, 4, 5, 8, 9, 10, 11, 12, 17, 23, 26, 32, 34, 42, 44, 50, 65, 67, 90, 99]
 
-    # New Test Case 13: 20 negative numbers
+    # Test Case 13: 20 negative numbers
     assert sublist_sort([-10, -23, -5, -17, -42, -90, -32, -50, -67, -8, -12, -4, -99, -65, -1, -34, -11, -44, -26, -9]) == [-99, -90, -67, -65, -50, -44, -42, -34, -32, -26, -23, -17, -12, -11, -10, -9, -8, -5, -4, -1]
 
-    # New Test Case 14: 20 mixed positive and negative numbers
+    # Test Case 14: 20 mixed positive and negative numbers
     assert sublist_sort([10, -23, 5, -17, 42, -90, -32, 50, -67, 8, -12, 4, 99, -65, 1, 34, -11, 44, -26, 9]) == [-90, -67, -65, -32, -26, -23, -17, -12, -11, 1, 4, 5, 8, 9, 10, 34, 42, 44, 50, 99]
 
-    # New Test Case 15: Floating-point numbers
+    # Test Case 15: Floating-point numbers
     assert sublist_sort([10.5, 2.3, 5.7, 4.8, 1.9, 0.2, 6.3, 3.4, 2.1, 8.0, 9.5, 3.6, 7.4]) == [0.2, 1.9, 2.1, 2.3, 3.4, 3.6, 4.8, 5.7, 6.3, 7.4, 8.0, 9.5, 10.5]
 
     print("All test cases passed!")

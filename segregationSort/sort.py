@@ -1,3 +1,15 @@
+# 1. Name:
+#      Michael Johnson
+# 2. Assignment Name:
+#      Lab 13 : Segregation Sort Program
+# 3. Assignment Description:
+#      The program takes in an array and then using a segregate sort algorithm it sorts the array in ascending order.
+# 4. What was the hardest part? Be as specific as possible.
+#      The design was the hardest part, but since the design was so strong, iomplementing it in code was very easy. I just had to make sure it was correct.
+# 5. How long did it take for you to complete the assignment?
+#      1 1/2 hours including writing the program, recording and submitting.
+
+
 def segregate(array, iBegin, iEnd):
     '''
     Partition function for quicksort.

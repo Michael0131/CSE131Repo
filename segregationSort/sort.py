@@ -1,48 +1,86 @@
 def segregate(array, iBegin, iEnd):
+    '''
+    Partition function for quicksort.
+    Rearranges elements in the array such that elements less than or equal to the pivot 
+    are on the left, and elements greater than the pivot are on the right.
+    
+    Parameters:
+        array (list): The list of elements to sort.
+        iBegin (int): Starting index of the segment to partition.
+        iEnd (int): Ending index of the segment to partition.
+    
+    Returns:
+        int: The index where the pivot element is placed after partitioning.
+    '''
     if iBegin == iEnd:
-        return iBegin  # Single element case
-    
-    iPivot = (iBegin + iEnd) // 2  # Pivot selection
-    iUp = iBegin
-    iDown = iEnd
+        return iBegin  # Base case: only one element, no need to partition
 
-    # Partition loop
+    iPivot = (iBegin + iEnd) // 2  # Choose the middle element as pivot
+    iUp = iBegin  # Start scanning from the beginning
+    iDown = iEnd  # Start scanning from the end
+
+    # Partitioning loop: move pointers towards each other
     while iUp < iDown:
+        # Move iUp right while elements are <= pivot
         while iUp < iDown and array[iUp] <= array[iPivot]:
-            iUp += 1  # Move up the index
-        
-        while iUp < iDown and array[iDown] >= array[iPivot]:
-            iDown -= 1  # Move down the index
-        
-        if iUp < iDown:
-            array[iUp], array[iDown] = array[iDown], array[iUp]  # Swap elements
-    
-    iPivotSwap = iUp
+            iUp += 1
 
-    # Ensure the pivot is in the right place
+        # Move iDown left while elements are >= pivot
+        while iUp < iDown and array[iDown] >= array[iPivot]:
+            iDown -= 1
+
+        # Swap elements that are out of place
+        if iUp < iDown:
+            array[iUp], array[iDown] = array[iDown], array[iUp]
+
+    iPivotSwap = iUp  # Index where pivot will be swapped
+
+    # Adjust pivot swap index if it's larger than pivot but still out of place
     if iPivotSwap > iPivot and array[iPivotSwap] > array[iPivot]:
         iPivotSwap -= 1
-    
-    array[iPivotSwap], array[iPivot] = array[iPivot], array[iPivotSwap]  # Swap pivot
-    
-    return iPivotSwap
+
+    # Swap pivot with element at its final sorted position
+    array[iPivotSwap], array[iPivot] = array[iPivot], array[iPivotSwap]
+
+    return iPivotSwap  # Return the new pivot position
+
 
 def sort_recursive(array, iBegin, iEnd):
-    # Base case: single element or invalid range
+    '''
+    Recursive quicksort function.
+    Sorts the array by partitioning it and recursively sorting the subarrays.
+    
+    Parameters:
+        array (list): The list of elements to sort.
+        iBegin (int): Starting index of the current segment.
+        iEnd (int): Ending index of the current segment.
+    '''
+    # Base case: if subarray is empty or has one element
     if iEnd < 0 or iEnd - iBegin < 1:
         return
-    
-    # Partition the array
+
+    # Partition the array and get pivot index
     iPivot = segregate(array, iBegin, iEnd)
-    
-    # Recursively sort the two partitions
+
+    # Recursively sort the subarrays around the pivot
     sort_recursive(array, iBegin, iPivot - 1)
     sort_recursive(array, iPivot + 1, iEnd)
 
+
 def sort(array):
-        # Wrapper for the provided sort_recursive() function
-        sort_recursive(array, 0, len(array) - 1)
-        return array
+    '''
+    Public function to sort a list using quicksort.
+    
+    Parameters:
+        array (list): The list of elements to be sorted.
+    
+    Returns:
+        list: The sorted list.
+    '''
+    # Start the recursive sort with full array bounds
+    sort_recursive(array, 0, len(array) - 1)
+    return array
+
 
 def run_tests():
 
